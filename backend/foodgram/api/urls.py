@@ -1,7 +1,9 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views import TagViewSet, RecipeViewSet, IngredientViewSet
+from .views import (
+    TagViewSet, RecipeViewSet, IngredientViewSet
+)
 
 
 router = routers.SimpleRouter()
@@ -16,9 +18,9 @@ router.register(
 )
 router.register(
     'ingredients',
-    IngredientViewSet
+    IngredientViewSet,
 )
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]

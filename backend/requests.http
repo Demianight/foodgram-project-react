@@ -1,0 +1,18 @@
+POST http://127.0.0.1:8000/api/recipes/
+Content-Type: application/json
+Authorization: Token 00cb80c023194b53b1c763b9af4dc6f47656bca6
+
+{
+  "name": "string",
+  "text": "string",
+  "cooking_time": 1
+}
+
+###
+POST http://127.0.0.1:8000/api/auth/token/login/
+Content-Type: application/json
+
+{
+  "email": "kdemian@yandex.ru",
+  "password": "demian"
+}

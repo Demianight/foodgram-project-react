@@ -6,17 +6,6 @@ class AbstractSerializer(serializers.ModelSerializer):
     pass
 
 
-class RecipeSerializer(AbstractSerializer):
-    author = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True,
-    )
-
-    class Meta:
-        model = Recipe
-        fields = '__all__'
-
-
 class TagSerializer(AbstractSerializer):
     class Meta:
         model = Tag
@@ -27,3 +16,19 @@ class IngredientSerializer(AbstractSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
+
+
+class RecipeSerializer(AbstractSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+    )
+    tags = TagSerializer(many=True,)
+    ingredients = IngredientSerializer(many=True,)
+
+    class Meta:
+        model = Recipe
+        fields = [
+            'id', 'tags', 'author', 'ingredients',
+            'name', 'image', 'text', 'cooking_time'
+        ]

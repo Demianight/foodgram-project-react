@@ -15,19 +15,26 @@ class Recipe(models.Model):
     name = models.CharField(
         max_length=128,
     )
-    image = models.ImageField()
+    image = models.ImageField(
+        upload_to='recipes/'
+    )
     text = models.TextField(
     )
     ingredients = models.ManyToManyField(
         'Ingredient',
-        related_name='ingredients',
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='tags',
+        related_name='recipes',
     )
     cooking_time = models.SmallIntegerField(
     )
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ['-pub_date']
 
     def __str__(self) -> str:
         return self.name
@@ -51,7 +58,7 @@ class Ingredient(models.Model):
         max_length=128
     )
     amount = models.SmallIntegerField()
-    units = models.CharField(
+    measurement_unit = models.CharField(
         max_length=16
     )
 

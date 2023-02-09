@@ -23,4 +23,5 @@ router.register(
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('auth/', include('users.urls')),
 ]

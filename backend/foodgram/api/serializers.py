@@ -1,5 +1,6 @@
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework import serializers
+from users.serializers import UserSerializer
 
 
 class AbstractSerializer(serializers.ModelSerializer):
@@ -9,20 +10,17 @@ class AbstractSerializer(serializers.ModelSerializer):
 class TagSerializer(AbstractSerializer):
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = ['id', 'name', 'color', 'slug']
 
 
 class IngredientSerializer(AbstractSerializer):
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ['id', 'name', 'measurement_unit']
 
 
 class RecipeSerializer(AbstractSerializer):
-    author = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True,
-    )
+    author = UserSerializer()
     tags = TagSerializer(many=True,)
     ingredients = IngredientSerializer(many=True,)
 

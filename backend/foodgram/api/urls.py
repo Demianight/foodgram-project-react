@@ -1,24 +1,21 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views import IngredientViewSet, RecipeViewSet, TagViewSet
+from .utils import router_data
+
 
 router = routers.SimpleRouter()
 
-router.register(
-    'recipes',
-    RecipeViewSet,
-)
-router.register(
-    'tags',
-    TagViewSet,
-)
-router.register(
-    'ingredients',
-    IngredientViewSet,
-)
+
+for data in router_data:
+    router.register(
+        prefix=data.router_endpoint,
+        viewset=data.viewset_class,
+        basename=data.basename
+    )
+
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth/', include('users.urls')),
+    path('', include('users.urls')),
 ]

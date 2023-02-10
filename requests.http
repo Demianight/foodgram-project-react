@@ -16,3 +16,19 @@ Content-Type: application/json
   "email": "kdemian@yandex.ru",
   "password": "demian"
 }
+
+###
+GET http://127.0.0.1:8000/api/recipes/
+
+###
+GET http://127.0.0.1:8000/api/recipes/1
+
+
+###
+POST http://127.0.0.1:8000/api/recipes/1/favourite/
+Authorization: Token 00cb80c023194b53b1c763b9af4dc6f47656bca6
+
+
+###
+POST http://127.0.0.1:8000/api/recipes/1/favourite/
+Authorization: Token 00cb80c023194b53b1c763b9af4dc6f47656bca6

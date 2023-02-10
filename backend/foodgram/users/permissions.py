@@ -16,3 +16,4 @@ class NotAuthPermission(permissions.BasePermission):
             or obj.author == request.user
         ):
             return True
+        return False

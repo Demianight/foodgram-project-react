@@ -38,8 +38,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         url_path='favourite',
-        methods=['post',],
-        permission_classes=[IsAuthenticated,]
+        methods=['post', ],
+        permission_classes=[IsAuthenticated, ]
     )
     def add_to_favourite(self, request, pk=None):
         recipe = get_object_or_404(Recipe, id=pk)

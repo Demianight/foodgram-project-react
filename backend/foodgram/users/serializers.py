@@ -7,7 +7,7 @@ from .models import Favourite, ShoppingCart
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_model
-        fields = ['email', 'id', 'username', 'first_name', 'last_name',]
+        fields = ['email', 'id', 'username', 'first_name', 'last_name', ]
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):

@@ -1,5 +1,5 @@
 from django.db import models
-from recipes.models import User_model, Recipe
+from recipes.models import Recipe, User_model
 
 
 class ShoppingCart(models.Model):

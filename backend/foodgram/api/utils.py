@@ -1,8 +1,8 @@
 from dataclasses import dataclass
+
 from rest_framework import viewsets
-from .views import (
-    IngredientViewSet, RecipeViewSet, TagViewSet,
-)
+
+from .views import IngredientViewSet, RecipeViewSet, TagViewSet
 
 
 @dataclass

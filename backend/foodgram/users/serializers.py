@@ -1,6 +1,7 @@
-from rest_framework import serializers
 from recipes.models import User_model
-from .models import ShoppingCart, Favourite
+from rest_framework import serializers
+
+from .models import Favourite, ShoppingCart
 
 
 class UserSerializer(serializers.ModelSerializer):

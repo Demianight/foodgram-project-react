@@ -3,7 +3,6 @@ from rest_framework import routers
 
 from .utils import router_data
 
-
 router = routers.SimpleRouter()
 
 

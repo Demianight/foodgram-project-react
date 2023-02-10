@@ -1,10 +1,8 @@
-from rest_framework import viewsets
-from recipes.models import Recipe, Tag, Ingredient
-from .serializers import (
-    RecipeSerializer, TagSerializer, IngredientSerializer
-)
+from recipes.models import Ingredient, Recipe, Tag
+from rest_framework import mixins, viewsets
 from users.permissions import NotAuthPermission
-from rest_framework import mixins
+
+from .serializers import IngredientSerializer, RecipeSerializer, TagSerializer
 
 
 class AbstractViewSet(

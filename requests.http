@@ -1,6 +1,7 @@
 POST http://127.0.0.1:8000/api/recipes/
 Content-Type: application/json
-Authorization: Token 00cb80c023194b53b1c763b9af4dc6f47656bca6
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c
+# Other token: 00cb80c023194b53b1c763b9af4dc6f47656bca6
 
 {
   "name": "string",
@@ -26,9 +27,30 @@ GET http://127.0.0.1:8000/api/recipes/1
 
 ###
 POST http://127.0.0.1:8000/api/recipes/1/favourite/
-Authorization: Token 00cb80c023194b53b1c763b9af4dc6f47656bca6
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c
+# Other token: 00cb80c023194b53b1c763b9af4dc6f47656bca6
 
 
 ###
 POST http://127.0.0.1:8000/api/recipes/1/favourite/
-Authorization: Token 00cb80c023194b53b1c763b9af4dc6f47656bca6
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c
+# Other token: 00cb80c023194b53b1c763b9af4dc6f47656bca6
+
+
+###
+DELETE http://127.0.0.1:8000/api/recipes/1/favourite/
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c
+
+###
+POST http://127.0.0.1:8000/api/recipes/1/shopping_cart/
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c
+# Other token: 00cb80c023194b53b1c763b9af4dc6f47656bca6
+
+
+###
+DELETE http://127.0.0.1:8000/api/recipes/1/shopping_cart/
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c
+
+###
+GET http://127.0.0.1:8000/api/users
+Authorization: Token e68915256dde5b88a406f2012a2bcf4f45db830c

@@ -9,9 +9,14 @@ class ShoppingCart(models.Model):
         related_name='cart',
         null=True,
     )
-    recipes = models.ManyToManyField(
+    recipe = models.ManyToManyField(
         Recipe,
     )
+
+    def save(self, *args, **kwargs) -> None:
+        self.validate_unique()
+
+        return super().save(*args, **kwargs)
 
 
 class Favourite(models.Model):

@@ -56,9 +56,8 @@ class Ingredient(models.Model):
     name = models.CharField(
         max_length=128
     )
-    amount = models.SmallIntegerField()
     measurement_unit = models.CharField(
-        max_length=16
+        max_length=32
     )
 
     def __str__(self) -> str:

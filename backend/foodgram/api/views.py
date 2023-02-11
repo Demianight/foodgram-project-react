@@ -2,10 +2,9 @@ from django.shortcuts import get_object_or_404
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.models import Favourite
+from users.models import Favourite, ShoppingCart
 from users.permissions import NotAuthPermission
 
 from .serializers import IngredientSerializer, RecipeSerializer, TagSerializer
@@ -38,16 +37,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         url_path='favourite',
-        methods=['post', ],
+        methods=['post', 'delete'],
         permission_classes=[IsAuthenticated, ]
     )
-    def add_to_favourite(self, request, pk=None):
+    def favourite(self, request, pk=None):
         recipe = get_object_or_404(Recipe, id=pk)
-        try:
-            favour = Favourite.objects.get(owner=request.user, recipe=recipe)
-        except Exception:
-            favour = Favourite.objects.create(owner=request.user)
-            favour.recipe.add(recipe)
+        favourite = Favourite.objects.get_or_create(owner=request.user)[0]
+        if request.method == 'POST':
+            favourite.recipe.add(recipe)
 
             data = {
                 'id': recipe.id,
@@ -55,11 +52,38 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'name': recipe.name,
                 'cooking_time': recipe.cooking_time,
             }
-
             return Response(
                 data,
                 status=201
             )
-        raise ValidationError(
-            'You cant add recipe to your favourite twice.'
-        )
+        else:
+            favourite.recipe.remove(recipe)
+            return Response(status=204)
+
+    @action(
+        detail=True,
+        url_path='shopping_cart',
+        methods=['post', 'delete'],
+        permission_classes=[IsAuthenticated, ]
+    )
+    def shopping_cart(self, request, pk=None):
+        recipe = get_object_or_404(Recipe, id=pk)
+        shopping_cart = ShoppingCart.objects.get_or_create(
+            owner=request.user
+        )[0]
+        if request.method == 'POST':
+            shopping_cart.recipe.add(recipe)
+
+            data = {
+                'id': recipe.id,
+                # 'image': recipe.image,
+                'name': recipe.name,
+                'cooking_time': recipe.cooking_time,
+            }
+            return Response(
+                data,
+                status=201
+            )
+        else:
+            shopping_cart.recipe.remove(recipe)
+            return Response(status=204)

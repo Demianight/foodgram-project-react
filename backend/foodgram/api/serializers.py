@@ -1,6 +1,5 @@
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework import serializers
-from users.serializers import UserSerializer
 
 
 class AbstractSerializer(serializers.ModelSerializer):
@@ -20,7 +19,6 @@ class IngredientSerializer(AbstractSerializer):
 
 
 class RecipeSerializer(AbstractSerializer):
-    author = UserSerializer()
     tags = TagSerializer(many=True,)
     ingredients = IngredientSerializer(many=True,)
 

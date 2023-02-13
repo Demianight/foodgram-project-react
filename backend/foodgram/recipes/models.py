@@ -1,13 +1,11 @@
 from colorfield.fields import ColorField
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.db import models
-
-User_model = get_user_model()
 
 
 class Recipe(models.Model):
     author = models.ForeignKey(
-        User_model,
+        User,
         on_delete=models.SET_NULL,
         null=True,
     )

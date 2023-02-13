@@ -1,11 +1,12 @@
-from rest_framework import mixins
 from api.views import AbstractGETViewSet
-from .models import User
-from .serializers import UserSerializer
+from django.shortcuts import get_object_or_404
+from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+
+from .models import User
+from .serializers import UserSerializer
 
 
 class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):

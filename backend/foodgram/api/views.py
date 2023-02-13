@@ -6,10 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.permissions import NotAuthPermission
 
-from .serializers import (
-    IngredientSerializer, RecipeSerializer,
-    RecipeCreateSerializer, TagSerializer
-)
+from .serializers import (IngredientSerializer, RecipeCreateSerializer,
+                          RecipeSerializer, TagSerializer)
 
 
 class AbstractGETViewSet(

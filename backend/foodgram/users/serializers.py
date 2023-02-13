@@ -2,8 +2,10 @@ from .models import User
 from rest_framework import serializers
 
 
-"""HAVE TO REWRITE IT"""
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['email', 'id', 'username', 'first_name', 'last_name']
+        extra_kwargs = {}
+        for field in fields:
+            extra_kwargs[field] = {'required': True}

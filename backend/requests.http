@@ -1,0 +1,56 @@
+###
+GET http://127.0.0.1:8000/api/users
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+
+###
+GET http://127.0.0.1:8000/api/users/me
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+
+###
+POST http://127.0.0.1:8000/api/auth/token/login
+Content-Type: application/json
+
+{
+    "email": "kdemian@yandex.ru",
+    "password": "demian"
+}
+
+###
+POST http://127.0.0.1:8000/api/recipes/1/favourite/
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+
+###
+DELETE http://127.0.0.1:8000/api/recipes/1/favourite/
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+
+###
+POST http://127.0.0.1:8000/api/recipes/1/shopping_cart/
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+
+###
+DELETE http://127.0.0.1:8000/api/recipes/1/shopping_cart/
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+
+
+###
+POST http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+
+{}
+
+###
+GET http://127.0.0.1:8000/api/recipes
+
+###
+POST http://127.0.0.1:8000/api/recipes/
+Authorization: Token 90d70255c4e3386da4aaaabc49d94e25add13ec2
+Content-Type: application/json
+
+{
+  "tags": [1],  
+  "ingredients": [1],
+  "name": "potato",
+  "image": "",
+  "text": "New potato",
+  "cooking_time": 20
+}

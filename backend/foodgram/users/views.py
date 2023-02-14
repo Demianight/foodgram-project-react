@@ -17,7 +17,9 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
 
     @action(
         detail=False,
-        methods=['GET',],
+        methods=[
+            'get',
+        ],
         permission_classes=[IsAuthenticated, ],
         url_path='me',
     )

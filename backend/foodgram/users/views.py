@@ -1,3 +1,4 @@
+from api.pagination import SixItemPagination
 from api.views import AbstractGETViewSet
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins
@@ -12,6 +13,7 @@ from .serializers import UserSerializer
 class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = SixItemPagination
 
     @action(
         detail=False,

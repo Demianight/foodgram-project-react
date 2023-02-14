@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.permissions import NotAuthPermission
 
+from .pagination import SixItemPagination
 from .serializers import (IngredientSerializer, RecipeCreateSerializer,
                           RecipeSerializer, TagSerializer)
 
@@ -29,6 +30,7 @@ class IngredientViewSet(AbstractGETViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [NotAuthPermission]
+    pagination_class = SixItemPagination
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
@@ -50,12 +52,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
             if recipe in request.user.favourite.all():
                 return Response(
                     {'errors': 'This recipe already in your favourite list.'},
-                    status=400
+                    status=400,
                 )
             request.user.favourite.add(recipe)
             data = {
                 'id': recipe.id,
-                # 'image': recipe.image,
+                'image': recipe.image,
                 'name': recipe.name,
                 'cooking_time': recipe.cooking_time
             }
@@ -63,7 +65,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if recipe not in request.user.favourite.all():
             return Response(
                 {'errors': 'There is no such recipe in your favourite list.'},
-                status=400
+                status=400,
             )
         request.user.favourite.remove(recipe)
         return Response(status=204)
@@ -80,12 +82,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
             if recipe in request.user.shopping_cart.all():
                 return Response(
                     {'errors': 'This recipe already in your cart.'},
-                    status=400
+                    status=400,
                 )
             request.user.shopping_cart.add(recipe)
             data = {
                 'id': recipe.id,
-                # 'image': recipe.image,
+                'image': recipe.image,
                 'name': recipe.name,
                 'cooking_time': recipe.cooking_time
             }
@@ -93,7 +95,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if recipe not in request.user.shopping_cart.all():
             return Response(
                 {'errors': 'There is no such recipe in your cart.'},
-                status=400
+                status=400,
             )
         request.user.shopping_cart.remove(recipe)
         return Response(status=204)

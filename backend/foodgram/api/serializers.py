@@ -1,5 +1,7 @@
+from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework import serializers
+from users.serializers import UserSerializer
 
 
 class AbstractSerializer(serializers.ModelSerializer):
@@ -22,6 +24,7 @@ class RecipeSerializer(AbstractSerializer):
     tags = TagSerializer(many=True)
     ingredients = IngredientSerializer(many=True,)
     author = UserSerializer(read_only=True,)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe

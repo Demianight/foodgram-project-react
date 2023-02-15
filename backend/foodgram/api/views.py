@@ -72,34 +72,25 @@ class RecipeViewSet(viewsets.ModelViewSet):
         request.user.favourite.remove(recipe)
         return Response(status=204)
 
-    @action(
-        detail=True,
-        url_path='shopping_cart',
-        methods=[
-            'post', 'delete',
-        ],
-        permission_classes=[IsAuthenticated, ]
-    )
-    def add_to_shopping_cart(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        if request.method == 'POST':
-            if recipe in request.user.shopping_cart.all():
-                return Response(
-                    {'errors': 'This recipe already in your cart.'},
-                    status=400,
-                )
-            request.user.shopping_cart.add(recipe)
-            data = {
-                'id': recipe.id,
-                'image': recipe.image,
-                'name': recipe.name,
-                'cooking_time': recipe.cooking_time
-            }
-            return Response(data, status=200)
-        if recipe not in request.user.shopping_cart.all():
-            return Response(
-                {'errors': 'There is no such recipe in your cart.'},
-                status=400,
-            )
-        request.user.shopping_cart.remove(recipe)
-        return Response(status=204)
+    # @action(
+    #     detail=True,
+    #     url_path='shopping_cart',
+    #     methods=[
+    #         'post', 'delete',
+    #     ],
+    #     permission_classes=[IsAuthenticated, ]
+    # )
+    # def add_to_shopping_cart(self, request, pk=None):
+    #     recipe = get_object_or_404(Recipe, id=pk)
+    #     is_adding = True if request.method == 'POST' else False
+    #     serializer = ShoppingCartSerializer(
+    #         {
+    #             'recipe': pk
+    #         },
+    #         context={
+    #             'user': request.user,
+    #             'recipe': recipe,
+    #         }
+    #     )
+    #     if serializer.is_valid():
+    #         serializer.save()

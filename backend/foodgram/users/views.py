@@ -5,8 +5,8 @@ from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-from .models import Follow, User
+from rest_framework.exceptions import ValidationError
+from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer)
 
@@ -27,7 +27,6 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     def get_me(self, request):
         user = get_object_or_404(User, pk=request.user.pk)
         data = UserSerializer(user).data
-        data['is_subscribed'] = False
         return Response(
             data, status=200
         )
@@ -35,7 +34,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     @action(
         detail=False,
         methods=[
-            'post',
+            'POST',
         ],
         permission_classes=[IsAuthenticated, ],
         url_path='set_password',
@@ -44,37 +43,57 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         user = request.user
         serializer = ChangePasswordSerializer(data=request.data)
 
-        if serializer.is_valid():
-            user.set_password(serializer.data.get("new_password"))
-            user.save()
-            return Response(status=204)
-
-        return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
+        user.set_password(serializer.data.get('new_password'))
+        user.save()
+        return Response(status=204)
 
     @action(
         detail=True,
-        methods=[
-            'post', 'delete',
-        ],
+        methods=['POST', ],
         permission_classes=[IsAuthenticated, ],
         url_path='subscribe',
     )
     def subscribe(self, request, pk):
-        if request.method == 'POST':
-            data = {
-                'author': pk,
-                'follower': request.user.id,
-            }
-            serializer = FollowSerializer(
-                data=data, context={'request': request, }
-            )
-            if serializer.is_valid():
-                serializer.save()
-                return Response(
-                    UserSerializer(User.objects.get(id=pk)).data
-                )
-            return Response(serializer.errors, status=400)
-        elif request.method == 'DELETE':
-            follow = get_object_or_404(Follow, author__id=pk)
+        data = {
+            'author': pk,
+            'follower': request.user.id,
+        }
+        serializer = FollowSerializer(
+            data=data, context={'request': request, }
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            UserSerializer(
+                User.objects.get(id=pk), context={'request': request}
+            ).data
+        )
+
+    @subscribe.mapping.delete
+    def delete_follow(self, request, pk=None):
+        follow = request.user.follows.filter(author__id=pk)
+        if follow:
             follow.delete()
             return Response(status=204)
+        raise ValidationError(
+            'You are not subscribed on this person.'
+        )
+
+    @action(
+        detail=False,
+        methods=['GET', ],
+        url_path='subscribtions',
+    )
+    def subscribtions(self, request):
+        follows = request.user.follows.all()
+        ids = follows.values_list('author_id', flat=True)
+        queryset = User.objects.filter(id__in=ids)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

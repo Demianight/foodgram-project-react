@@ -109,7 +109,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler'
+    # Strange thing in API docs
+
+    # 'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler'
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     # 'PAGE_SIZE': 6,
 }

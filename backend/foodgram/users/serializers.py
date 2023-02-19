@@ -1,11 +1,9 @@
 from django.contrib.auth.password_validation import validate_password
+from recipes.models import Recipe
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from .models import Follow, User
-
-
-from recipes.models import Recipe
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,6 +28,18 @@ class UserSerializer(serializers.ModelSerializer):
         if obj.id in ids:
             return True
         return False
+
+    def create(self, validated_data):
+        password = self.initial_data.pop('password')
+        user: User = super().create(validated_data)
+        try:
+            validate_password(password)
+            user.set_password(password)
+            user.save()
+            return user
+        except serializers.ValidationError as exc:
+            user.delete()
+            raise exc
 
 
 class ChangePasswordSerializer(serializers.Serializer):

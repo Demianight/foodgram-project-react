@@ -3,9 +3,10 @@ from api.views import AbstractGETViewSet
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
+
 from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer)
@@ -26,7 +27,12 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     )
     def get_me(self, request):
         user = get_object_or_404(User, pk=request.user.pk)
-        data = UserSerializer(user).data
+        data = UserSerializer(
+            user,
+            context={
+                'request': request
+            }
+        ).data
         return Response(
             data, status=200
         )
@@ -41,7 +47,10 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     )
     def set_password(self, request):
         user = request.user
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={'request': request}
+        )
 
         serializer.is_valid(raise_exception=True)
         user.set_password(serializer.data.get('new_password'))

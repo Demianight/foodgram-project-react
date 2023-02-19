@@ -1,10 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (
-    Ingredient, Recipe, Tag, IngredientAmount, IngredientAmount
-)
+from recipes.models import Ingredient, IngredientAmount, Recipe, Tag
 from rest_framework import serializers
 from users.serializers import UserSerializer
-from collections import OrderedDict
 
 
 class TagSerializer(serializers.ModelSerializer):

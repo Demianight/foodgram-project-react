@@ -1,3 +1,5 @@
+from urllib.parse import unquote
+
 from api.serializers import SimpleRecipeSerializer
 from django.shortcuts import get_object_or_404
 from recipes.models import Ingredient, Recipe, Tag
@@ -26,6 +28,18 @@ class TagViewSet(AbstractGETViewSet):
 class IngredientViewSet(AbstractGETViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get('name')
+
+        if name:
+            if name[0] == '%':
+                name = unquote(name)
+            name = name.lower()
+            queryset = list(queryset.filter(name__istartswith=name))
+
+        return queryset
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
-                          UserSerializer)
+                          UserSerializer, UserWithRecipesSerializer)
 
 
 class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
@@ -73,9 +73,14 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        recipes_count = self.request.query_params.get('recipes_count', 99999)
+
         return Response(
-            UserSerializer(
-                User.objects.get(id=pk), context={'request': request}
+            UserWithRecipesSerializer(
+                User.objects.get(id=pk), context={
+                    'request': request,
+                    'recipes_count': recipes_count
+                }
             ).data
         )
 
@@ -86,7 +91,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
             follow.delete()
             return Response(status=204)
         raise ValidationError(
-            'You are not subscribed on this person.'
+            {'errors': 'You are not subscribed on this person.'}
         )
 
     @action(
@@ -98,11 +103,23 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         follows = request.user.follows.all()
         ids = follows.values_list('author_id', flat=True)
         queryset = User.objects.filter(id__in=ids)
-
+        recipes_count = self.request.query_params.get('recipes_count', 99999)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = UserWithRecipesSerializer(
+                page, many=True, context={
+                    'recipes_count': recipes_count,
+                    'request': request
+                }
+            )
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = UserWithRecipesSerializer(
+            queryset, many=True, context={
+                'recipes_count': recipes_count,
+                'request': request
+            }
+        )
+
+        serializer.is_valid()
         return Response(serializer.data)

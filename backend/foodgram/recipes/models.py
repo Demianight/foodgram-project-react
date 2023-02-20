@@ -18,7 +18,7 @@ class Recipe(models.Model):
         'Tag',
         related_name='recipes',
     )
-    cooking_time = models.SmallIntegerField()
+    cooking_time = models.PositiveSmallIntegerField()
     pub_date = models.DateTimeField(auto_now_add=True, )
 
     class Meta:
@@ -56,7 +56,7 @@ class IngredientAmount(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    amount = models.SmallIntegerField()
+    amount = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return str(self.amount)

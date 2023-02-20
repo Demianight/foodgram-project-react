@@ -1,3 +1,4 @@
+from api import serializers as sr
 from django.contrib.auth.password_validation import validate_password
 from recipes.models import Recipe
 from rest_framework import serializers
@@ -40,6 +41,27 @@ class UserSerializer(serializers.ModelSerializer):
         except serializers.ValidationError as exc:
             user.delete()
             raise exc
+
+
+class UserWithRecipesSerializer(UserSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'email', 'id', 'username', 'first_name', 'last_name',
+            'is_subscribed', 'recipes'
+        ]
+        extra_kwargs = {}
+        for field in fields:
+            extra_kwargs[field] = {'required': True}
+
+    def get_recipes(self, obj):
+        recipes_count = self.context.get('recipes_count')
+        recipes = obj.recipes.all()[:recipes_count]
+        data = sr.SimpleRecipeSerializer(recipes, many=True).data
+        return data
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -92,7 +114,7 @@ class CartSerializer(serializers.Serializer):
         cart = getattr(user, attr)
         if recipe not in cart.all():
             raise serializers.ValidationError(
-                'This recipe is already removed.'
+                {'errors': 'This recipe is already removed.'}
             )
         cart.remove(recipe)
         return {}
@@ -104,7 +126,7 @@ class CartSerializer(serializers.Serializer):
         cart = getattr(user, attr)
         if recipe in cart.all():
             raise serializers.ValidationError(
-                'This recipe is already added.'
+                {'errors': 'This recipe is already added.'}
             )
         cart.add(recipe)
 

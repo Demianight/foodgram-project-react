@@ -107,6 +107,10 @@ GET http://127.0.0.1:8000/api/users/subscribtions/
 Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
 
 ###
+GET http://127.0.0.1:8000/api/users/subscribtions/
+Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+
+###
 GET http://127.0.0.1:8000/api/users/?limit=1
 
 ###
@@ -119,4 +123,8 @@ Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65
 
 ###
 GET http://127.0.0.1:8000/api/recipes/?is_in_shopping_cart=1
+Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+
+###
+GET http://127.0.0.1:8000/api/ingredients/?name=пше
 Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 

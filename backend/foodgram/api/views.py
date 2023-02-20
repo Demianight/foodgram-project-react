@@ -142,3 +142,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.destroy(recipe)
         return Response(status=204)
+
+    @action(
+        detail=False,
+        methods=['GET', ],
+        url_path='download_shopping_cart',
+    )
+    def download_shopping_cart(self, request):
+        # In production
+        ...

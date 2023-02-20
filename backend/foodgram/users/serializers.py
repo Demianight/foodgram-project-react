@@ -60,8 +60,7 @@ class UserWithRecipesSerializer(UserSerializer):
     def get_recipes(self, obj):
         recipes_count = self.context.get('recipes_count')
         recipes = obj.recipes.all()[:recipes_count]
-        data = sr.SimpleRecipeSerializer(recipes, many=True).data
-        return data
+        return sr.SimpleRecipeSerializer(recipes, many=True).data
 
 
 class ChangePasswordSerializer(serializers.Serializer):

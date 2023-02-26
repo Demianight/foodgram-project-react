@@ -12,11 +12,11 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('name', )
 
 
 class IngredientAmountAdmin(admin.ModelAdmin):
-    list_filter = ('name', )
+    pass
 
 
 admin.site.register(Recipe, RecipeAdmin)

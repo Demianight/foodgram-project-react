@@ -33,9 +33,8 @@ class UserSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         if not user.is_authenticated:
             return False
-        follows = user.follows
-        ids = follows.values_list('author_id', flat=True)
-        if obj.id in ids:
+        follow = user.follows.filter(author=obj)
+        if follow.exists():
             return True
         return False
 
@@ -118,16 +117,37 @@ class CartSerializer(serializers.Serializer):
     )
     attr = serializers.CharField()
 
+    def validate(self, attrs):
+        request = self.context.get('request')
+        user = request.user
+        recipe = attrs.get('recipe')
+        attr = attrs.get('attr')
+        cart = getattr(user, attr)
+        method = request.method
+        recipe = attrs.get('recipe')
+        if (
+            (not cart.filter(id=recipe.id).exists())
+            and method == 'DELETE'
+        ):
+            raise serializers.ValidationError(
+                {'errors': 'This recipe is already removed.'}
+            )
+        elif (
+            cart.filter(id=recipe.id).exists()
+            and method == 'POST'
+        ):
+            raise serializers.ValidationError(
+                {'errors': 'This recipe is already added.'}
+            )
+        return super().validate(attrs)
+
     def destroy(self, recipe):
         user = self.context.get('request').user
         recipe = self.validated_data.get('recipe')
         attr = self.validated_data.get('attr')
         cart = getattr(user, attr)
-        if recipe not in cart.all():
-            raise serializers.ValidationError(
-                {'errors': 'This recipe is already removed.'}
-            )
         cart.remove(recipe)
+
         return {}
 
     def create(self, validated_data):
@@ -135,10 +155,6 @@ class CartSerializer(serializers.Serializer):
         recipe = validated_data.get('recipe')
         attr = validated_data.get('attr')
         cart = getattr(user, attr)
-        if recipe in cart.all():
-            raise serializers.ValidationError(
-                {'errors': 'This recipe is already added.'}
-            )
         cart.add(recipe)
 
         return recipe

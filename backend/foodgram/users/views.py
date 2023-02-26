@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
+from .permissions import NotAuthPermission
 from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer, UserWithRecipesSerializer)
@@ -15,6 +15,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = SixItemPagination
+    permission_classes = [NotAuthPermission, ]
 
     @action(
         detail=False,

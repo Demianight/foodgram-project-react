@@ -4,7 +4,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 from users.serializers import CartSerializer
 
-from .serializers import SimpleRecipeSerializer
+from users.serializers import SimpleRecipeSerializer
 
 
 class AbstractGETViewSet(

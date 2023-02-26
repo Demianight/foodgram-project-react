@@ -137,9 +137,3 @@ class RecipeEditCreateSerializer(serializers.ModelSerializer):
         return RecipeSerializer(
             instance, context=context
         ).data
-
-
-class SimpleRecipeSerializer(RecipeSerializer):
-    class Meta:
-        model = Recipe
-        fields = ['id', 'name', 'image', 'cooking_time', ]

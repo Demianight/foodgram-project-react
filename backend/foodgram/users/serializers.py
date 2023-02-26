@@ -1,10 +1,18 @@
-from api import serializers as sr
 from django.contrib.auth.password_validation import validate_password
 from recipes.models import Recipe
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+from drf_extra_fields.fields import Base64ImageField
 
 from .models import Follow, User
+
+
+class SimpleRecipeSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'name', 'image', 'cooking_time', ]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -64,7 +72,7 @@ class UserWithRecipesSerializer(UserSerializer):
     def get_recipes(self, obj):
         recipes_count = self.context.get('recipes_count')
         recipes = obj.recipes.all()[:recipes_count]
-        return sr.SimpleRecipeSerializer(recipes, many=True).data
+        return SimpleRecipeSerializer(recipes, many=True).data
 
 
 class ChangePasswordSerializer(serializers.Serializer):

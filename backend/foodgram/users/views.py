@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import User
-from .permissions import NotAuthPermission
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer, UserWithRecipesSerializer)
 
@@ -16,7 +15,6 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = SixItemPagination
-    permission_classes = [NotAuthPermission, ]
 
     @action(
         detail=False,

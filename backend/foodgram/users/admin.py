@@ -4,7 +4,7 @@ from .models import Follow, User
 
 
 class UserAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('name', 'email')
 
 
 class FollowAdmin(admin.ModelAdmin):

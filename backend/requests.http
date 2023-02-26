@@ -1,6 +1,6 @@
 POST http://127.0.0.1:8000/api/recipes/
 Content-Type: application/json
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 {
   "ingredients": [
@@ -16,6 +16,29 @@ Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65
   "name": "string",
   "text": "string",
   "cooking_time": 1
+}
+
+###
+PATCH  http://127.0.0.1:8000/api/recipes/1/
+Content-Type: application/json
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
+
+{
+  "tags": [
+    1
+  ],
+  "ingredients": [
+    {
+      "id": 345,
+      "amount": 20
+    },
+    {
+      "id": 902,
+      "amount": 1
+    }
+  ],
+  "name": "New name",
+  "cooking_time": 2
 }
 
 ###
@@ -36,43 +59,43 @@ Content-Type: application/json
 
 {
   "email": "kdemian@yandex.ru",
-  "password": "Demian197"
+  "password": "demian"
 }
 
 ###
 GET http://127.0.0.1:8000/api/recipes/
 
 ###
-GET http://127.0.0.1:8000/api/recipes/demian
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+GET http://127.0.0.1:8000/api/recipes/?author=1
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/recipes/1/
 
 ###
-POST http://127.0.0.1:8000/api/recipes/1/favourite/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+POST http://127.0.0.1:8000/api/recipes/1/favorite/
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
-DELETE http://127.0.0.1:8000/api/recipes/1/favourite/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+DELETE http://127.0.0.1:8000/api/recipes/1/favorite/
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 POST http://127.0.0.1:8000/api/recipes/1/shopping_cart/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 
 ###
 DELETE http://127.0.0.1:8000/api/recipes/1/shopping_cart/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/users/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/users/2/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/tags/
@@ -82,7 +105,7 @@ GET http://127.0.0.1:8000/api/tags/1/
 
 ###
 POST http://127.0.0.1:8000/api/users/set_password/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 Content-Type: application/json
 
 {
@@ -92,39 +115,43 @@ Content-Type: application/json
 
 ### Subscribe on yourself (error)
 POST http://127.0.0.1:8000/api/users/1/subscribe/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55
 
 ###
 POST http://127.0.0.1:8000/api/users/2/subscribe/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 DELETE http://127.0.0.1:8000/api/users/2/subscribe/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/users/subscribtions/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/users/subscribtions/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/users/?limit=1
 
 ###
 GET http://127.0.0.1:8000/api/users/me/
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
-GET http://127.0.0.1:8000/api/recipes/?is_in_favourite=1
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+GET http://127.0.0.1:8000/api/recipes/?is_in_favorite=1
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/recipes/?is_in_shopping_cart=1
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
 
 ###
 GET http://127.0.0.1:8000/api/ingredients/?name=пше
-Authorization: Token a58181e634dc57cf92fdae8c7dd74f2b5bc62d65 
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 
+
+###
+GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
+Authorization: Token 70fc545fd873e6ebff6337a694ec32c938aeca55 

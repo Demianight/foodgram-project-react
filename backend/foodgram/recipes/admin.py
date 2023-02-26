@@ -3,23 +3,19 @@ from django.contrib import admin
 from .models import Ingredient, IngredientAmount, Recipe, Tag
 
 
-class Adm(admin.ModelAdmin):
+class RecipeAdmin(admin.ModelAdmin):
     pass
 
 
-class RecipeAdmin(Adm):
+class TagAdmin(admin.ModelAdmin):
     pass
 
 
-class TagAdmin(Adm):
+class IngredientAdmin(admin.ModelAdmin):
     pass
 
 
-class IngredientAdmin(Adm):
-    pass
-
-
-class IngredientAmountAdmin(Adm):
+class IngredientAmountAdmin(admin.ModelAdmin):
     pass
 
 

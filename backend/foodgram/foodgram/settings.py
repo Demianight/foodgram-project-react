@@ -1,9 +1,23 @@
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-272*#q3x4(+06uzb2irxe5lz$4s+v32%+!m6kc0#sjn*-3u7*!'
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    default='django-insecure-272*#q3x4(+06uzb2irxe5lz$4s+v32%+!m6kc0#sjn*-3u7*!'
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1'
+]
 
 DEBUG = True
 
@@ -39,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'foodgram.urls'
 
 TEMPLATES = [
@@ -62,10 +77,34 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv(
+            'DB_ENGINE', default='django.db.backends.postgresql',
+        ),
+        'NAME': os.getenv(
+            'DB_NAME', default='postgres',
+        ),
+        'USER': os.getenv(
+            'POSTGRES_USER', default='postgres',
+        ),
+        'PASSWORD': os.getenv(
+            'POSTGRES_PASSWORD', default='password',
+        ),
+        'HOST': os.getenv(
+            'DB_HOST', default='127.0.0.1',
+        ),
+        'PORT': os.getenv(
+            'DB_PORT', default=5432,
+        )
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'db.sqlite',
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -110,11 +149,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    # Strange thing in API docs
-
-    # 'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler'
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'PAGE_SIZE': 6,
 }
 
 DJOSER = {

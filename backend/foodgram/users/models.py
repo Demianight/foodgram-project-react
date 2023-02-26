@@ -8,7 +8,7 @@ class User(AbstractUser):
         related_name='users',
         blank=True,
     )
-    favourite = models.ManyToManyField(
+    favorite = models.ManyToManyField(
         'recipes.Recipe',
         blank=True,
     )
@@ -25,3 +25,11 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='following',
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['follower', 'author', ],
+                name='Unique follow'
+            )
+        ]

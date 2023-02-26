@@ -1,23 +1,16 @@
 from urllib.parse import unquote
 
-from api.serializers import SimpleRecipeSerializer
-from django.shortcuts import get_object_or_404
 from recipes.models import Ingredient, Recipe, Tag
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from users.permissions import IsAuthorPermission, NotAuthPermission
-from users.serializers import CartSerializer
 
 from .pagination import SixItemPagination
 from .serializers import (IngredientSerializer, RecipeEditCreateSerializer,
                           RecipeSerializer, TagSerializer)
-
-
-class AbstractGETViewSet(
-    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin
-):
-    pass
+from .mixins import AbstractGETViewSet, add_to_cart, remove_from_cart
+from .utils import make_cart_file
+from rest_framework.response import Response
 
 
 class TagViewSet(AbstractGETViewSet):
@@ -78,66 +71,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ids = self.request.user.shopping_cart.values_list('id', flat=True)
             queryset = queryset.filter(id__in=ids)
 
-        is_in_favourite = self.request.query_params.get('is_in_favourite')
-        if is_in_favourite:
-            ids = self.request.user.favourite.values_list('id', flat=True)
-        return queryset.filter(id__in=ids)
+        is_in_favorite = self.request.query_params.get('is_in_favorite')
+        if is_in_favorite:
+            ids = self.request.user.favorite.values_list('id', flat=True)
+            queryset = queryset.filter(id__in=ids)
+        return queryset
 
-    # This actions work, but there are absolutely
-    # same and probly could be done better somehow using DRY
     @action(detail=True, methods=['POST', ], url_path='shopping_cart',)
     def shopping_cart(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        data = {'recipe': pk, 'attr': 'shopping_cart'}
-        serializer = CartSerializer(
-            data=data,
-            context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        recipe_sr = SimpleRecipeSerializer(recipe)
-        return Response(recipe_sr.data, status=201)
+        return add_to_cart(pk, request, 'shopping_cart')
 
     @shopping_cart.mapping.delete
     def remove_from_shopping_cart(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        data = {'recipe': pk, 'attr': 'shopping_cart'}
-        serializer = CartSerializer(
-            data=data,
-            context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.destroy(recipe)
-        return Response(status=204)
+        return remove_from_cart(pk, request, 'shopping_cart')
 
-    @action(
-        detail=True,
-        methods=['POST', ],
-        url_path='favourite',
-    )
-    def favourite(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        data = {'recipe': pk, 'attr': 'favourite'}
-        serializer = CartSerializer(
-            data=data,
-            context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        recipe_sr = SimpleRecipeSerializer(recipe)
-        return Response(recipe_sr.data, status=201)
+    @action(detail=True, methods=['POST', ], url_path='favorite', )
+    def favorite(self, request, pk=None):
+        return add_to_cart(pk, request, 'favorite')
 
-    @favourite.mapping.delete
-    def remove_favourite_list(self, request, pk=None):
-        recipe = get_object_or_404(Recipe, id=pk)
-        data = {'recipe': pk, 'attr': 'favourite'}
-        serializer = CartSerializer(
-            data=data,
-            context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.destroy(recipe)
-        return Response(status=204)
+    @favorite.mapping.delete
+    def remove_favorite_list(self, request, pk=None):
+        return remove_from_cart(pk, request, 'favorite')
 
     @action(
         detail=False,
@@ -145,5 +99,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
-        # In production
-        ...
+        filename = make_cart_file(request.user)
+
+        file = open(filename, 'r')
+
+        response: Response = Response(
+            file, content_type='text/plain',
+        )
+        response['Content-Disposition'] = 'attachment; filename="text.txt"'
+        return response

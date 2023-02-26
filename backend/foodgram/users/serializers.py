@@ -9,12 +9,13 @@ from .models import Follow, User
 
 class UserSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
         fields = [
             'email', 'id', 'username', 'first_name', 'last_name',
-            'is_subscribed'
+            'is_subscribed', 'password',
         ]
         extra_kwargs = {}
         for field in fields:
@@ -30,11 +31,14 @@ class UserSerializer(serializers.ModelSerializer):
             return True
         return False
 
+    def validate_password(self, password):
+        validate_password(password)
+        return password
+
     def create(self, validated_data):
-        password = self.initial_data.pop('password')
+        password = validated_data.pop('password')
         user: User = super().create(validated_data)
         try:
-            validate_password(password)
             user.set_password(password)
             user.save()
             return user
@@ -64,14 +68,14 @@ class UserWithRecipesSerializer(UserSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True,)
+    current_password = serializers.CharField(required=True,)
     new_password = serializers.CharField(required=True,)
 
     def validate_new_password(self, value):
         validate_password(value)
         return value
 
-    def validate_old_password(self, value):
+    def validate_current_password(self, value):
         user = self.context.get('request').user
         if not user.check_password(value):
             raise serializers.ValidationError(

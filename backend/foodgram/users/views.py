@@ -26,9 +26,8 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         url_path='me',
     )
     def get_me(self, request):
-        user = get_object_or_404(User, pk=request.user.pk)
         data = UserSerializer(
-            user,
+            request.user,
             context={
                 'request': request
             }
@@ -53,7 +52,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         )
 
         serializer.is_valid(raise_exception=True)
-        user.set_password(serializer.data.get('new_password'))
+        user.set_password(serializer.validated_data.get('new_password'))
         user.save()
         return Response(status=204)
 
@@ -77,7 +76,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
 
         return Response(
             UserWithRecipesSerializer(
-                User.objects.get(id=pk), context={
+                request.user, context={
                     'request': request,
                     'recipes_count': recipes_count
                 }
@@ -87,7 +86,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     @subscribe.mapping.delete
     def delete_follow(self, request, pk=None):
         follow = request.user.follows.filter(author__id=pk)
-        if follow:
+        if follow.exists():
             follow.delete()
             return Response(status=204)
         raise ValidationError(
@@ -121,5 +120,5 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
             }
         )
 
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         return Response(serializer.data)

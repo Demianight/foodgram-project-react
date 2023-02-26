@@ -133,3 +133,6 @@ dmypy.json
 
 # Django static dir
 static
+
+# Vscode stuff 
+.vscode

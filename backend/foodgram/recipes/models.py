@@ -9,17 +9,33 @@ class Recipe(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='recipes',
+        verbose_name='Автор рецепта',
     )
-    name = models.CharField(max_length=128, )
-    image = models.ImageField(upload_to='recipes/', )
-    text = models.TextField()
-    ingredients = models.ManyToManyField('Ingredient', )
+    name = models.CharField(
+        max_length=128,
+        verbose_name='Название рецепта',
+    )
+    image = models.ImageField(
+        upload_to='recipes/',
+        verbose_name='Изображение рецепта',
+    )
+    text = models.TextField(verbose_name='Описание рецепта', )
+    ingredients = models.ManyToManyField(
+        'Ingredient',
+        verbose_name='Ингредиенты',
+    )
     tags = models.ManyToManyField(
         'Tag',
         related_name='recipes',
+        verbose_name='Теги',
     )
-    cooking_time = models.PositiveSmallIntegerField()
-    pub_date = models.DateTimeField(auto_now_add=True, )
+    cooking_time = models.PositiveSmallIntegerField(
+        verbose_name='Время приготовления',
+    )
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата публикации',
+    )
 
     class Meta:
         ordering = ['-pub_date']
@@ -29,8 +45,14 @@ class Recipe(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=64, )
-    color = ColorField(default='#FF0000', )
+    name = models.CharField(
+        max_length=64,
+        verbose_name='Название тега',
+    )
+    color = ColorField(
+        default='#FF0000',
+        verbose_name='Цвет',
+    )
     slug = models.SlugField()
 
     def __str__(self) -> str:
@@ -38,8 +60,14 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=128, )
-    measurement_unit = models.CharField(max_length=32, )
+    name = models.CharField(
+        max_length=128,
+        verbose_name='Название ингредиента',
+    )
+    measurement_unit = models.CharField(
+        max_length=32,
+        verbose_name='Единицы измерения',
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -58,5 +86,13 @@ class IngredientAmount(models.Model):
     )
     amount = models.PositiveSmallIntegerField()
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'ingredient', ],
+                name='Unique recipes ingredient.'
+            )
+        ]
+
     def __str__(self):
-        return str(self.amount)
+        return f'{self.recipe.name}, {self.ingredient.name}: {self.amount}'

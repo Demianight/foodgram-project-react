@@ -36,6 +36,7 @@ class IngredientViewSet(AbstractGETViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = SixItemPagination
+    permission_classes = [NotAuthPermission, ]
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
@@ -45,10 +46,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeEditCreateSerializer
         return RecipeSerializer
 
-    def get_permissions(self):
-        if self.action in ('partial_update', 'delete'):
-            return [IsAuthorPermission(), ]
-        return [NotAuthPermission(), ]
+    # def get_permissions(self):
+    #     if self.action in ('partial_update', 'delete'):
+    #         return [IsAuthorPermission(), ]
+    #     return [NotAuthPermission(), ]
 
     def get_queryset(self):
         queryset = self.queryset

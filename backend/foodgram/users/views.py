@@ -9,12 +9,14 @@ from rest_framework.response import Response
 from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer, UserWithRecipesSerializer)
+from rest_framework.permissions import AllowAny
 
 
 class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = SixItemPagination
+    permission_classes = [AllowAny, ]
 
     @action(
         detail=False,

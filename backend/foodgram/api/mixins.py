@@ -2,9 +2,7 @@ from django.shortcuts import get_object_or_404
 from recipes.models import Recipe
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
-from users.serializers import CartSerializer
-
-from users.serializers import SimpleRecipeSerializer
+from users.serializers import CartSerializer, SimpleRecipeSerializer
 
 
 class AbstractGETViewSet(

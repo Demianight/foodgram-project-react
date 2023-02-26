@@ -71,13 +71,13 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        recipes_count = self.request.query_params.get('recipes_count', 99999)
+        recipes_limit = self.request.query_params.get('recipes_limit', 99999)
 
         return Response(
             UserWithRecipesSerializer(
                 request.user, context={
                     'request': request,
-                    'recipes_count': recipes_count
+                    'recipes_limit': recipes_limit
                 }
             ).data
         )
@@ -101,12 +101,12 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         follows = request.user.follows.all()
         ids = follows.values_list('author_id', flat=True)
         queryset = User.objects.filter(id__in=ids)
-        recipes_count = self.request.query_params.get('recipes_count', 99999)
+        recipes_limit = self.request.query_params.get('recipes_limit', 99999)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = UserWithRecipesSerializer(
                 page, many=True, context={
-                    'recipes_count': recipes_count,
+                    'recipes_limit': recipes_limit,
                     'request': request
                 }
             )
@@ -114,7 +114,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
 
         serializer = UserWithRecipesSerializer(
             queryset, many=True, context={
-                'recipes_count': recipes_count,
+                'recipes_limit': recipes_limit,
                 'request': request
             }
         )

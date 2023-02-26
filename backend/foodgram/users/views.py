@@ -95,9 +95,9 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
     @action(
         detail=False,
         methods=['GET', ],
-        url_path='subscribtions',
+        url_path='subscriptions',
     )
-    def subscribtions(self, request):
+    def subscriptions(self, request):
         follows = request.user.follows.all()
         ids = follows.values_list('author_id', flat=True)
         queryset = User.objects.filter(id__in=ids)

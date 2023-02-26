@@ -1,9 +1,10 @@
-from rest_framework import mixins, viewsets
 from django.shortcuts import get_object_or_404
 from recipes.models import Recipe
-from users.serializers import CartSerializer
-from .serializers import SimpleRecipeSerializer
+from rest_framework import mixins, viewsets
 from rest_framework.response import Response
+from users.serializers import CartSerializer
+
+from .serializers import SimpleRecipeSerializer
 
 
 class AbstractGETViewSet(

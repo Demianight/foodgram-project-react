@@ -1,6 +1,5 @@
 from api.pagination import SixItemPagination
 from api.views import AbstractGETViewSet
-from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError

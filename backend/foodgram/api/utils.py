@@ -1,8 +1,9 @@
-from recipes.models import IngredientAmount, Recipe
-from datetime import datetime as dt
-from users.models import User
 from collections import OrderedDict
 from dataclasses import dataclass
+from datetime import datetime as dt
+
+from recipes.models import IngredientAmount, Recipe
+from users.models import User
 
 
 @dataclass

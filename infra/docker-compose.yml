@@ -1,11 +1,12 @@
 version: '3.3'
 services:
 
-  # frontend:
-  #   container_name: front
-  #   build: ../frontend
-  #   volumes:
-  #     - ../frontend/:/app/result_build/
+  frontend:
+    container_name: front
+    # image: demianight/dimploma_front:latest
+    build: frontend/.
+    volumes:
+      - ../frontend/:/app/result_build/
 
   db:
     container_name: db
@@ -18,7 +19,7 @@ services:
 
   web:
     container_name: web
-    build: ../backend
+    image: demianight/diploma_project:latest
     restart: always
     volumes:
       - static_dir:/app/static/

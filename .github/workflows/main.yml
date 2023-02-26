@@ -22,7 +22,7 @@ jobs:
         python -m flake8
 
 
-  build_and_push_to_docker_hub:
+  push_to_docker_hub_web:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     needs: tests
@@ -45,3 +45,56 @@ jobs:
           context: backend/.
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/diploma_project:latest
+
+
+  push_to_docker_hub_front:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2 
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1 
+
+      - name: Login to Docker 
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v2 
+        with:
+          context: frontend/.
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/dimploma_front:latest
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: push_to_docker_hub_web
+    steps:
+    - name: executing remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.CLOUD_IP }}
+        username: ${{ secrets.CLOUD_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: |
+          sudo docker stop $(sudo docker ps -a -q)
+          sudo docker-compose up -d
+          
+
+
+  # send_message:
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   steps:
+  #   - name: send message
+  #     uses: appleboy/telegram-action@master
+  #     with:
+  #       to: ${{ secrets.TELEGRAM_TO }}
+  #       token: ${{ secrets.TELEGRAM_TOKEN }}
+  #       message: ${{ github.workflow }} успешно выполнен!

@@ -7,11 +7,17 @@ class User(AbstractUser):
         'recipes.Recipe',
         related_name='users',
         blank=True,
+        verbose_name='Корзина покупок',
     )
     favorite = models.ManyToManyField(
         'recipes.Recipe',
         blank=True,
+        verbose_name='Лист избранного',
     )
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователь'
 
 
 class Follow(models.Model):
@@ -19,11 +25,13 @@ class Follow(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='follows',
+        verbose_name='Подписчик',
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='following',
+        verbose_name='Автор',
     )
 
     class Meta:
@@ -33,3 +41,5 @@ class Follow(models.Model):
                 name='Unique follow'
             )
         ]
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписка'

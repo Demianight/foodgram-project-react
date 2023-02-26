@@ -39,6 +39,8 @@ class Recipe(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепт'
 
     def __str__(self) -> str:
         return self.name
@@ -55,6 +57,10 @@ class Tag(models.Model):
     )
     slug = models.SlugField()
 
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Тег'
+
     def __str__(self) -> str:
         return self.name
 
@@ -68,6 +74,10 @@ class Ingredient(models.Model):
         max_length=32,
         verbose_name='Единицы измерения',
     )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиент'
 
     def __str__(self) -> str:
         return self.name
@@ -93,6 +103,8 @@ class IngredientAmount(models.Model):
                 name='Unique recipes ingredient.'
             )
         ]
+        verbose_name = 'Количество ингредиента'
+        verbose_name_plural = 'Количество ингредиента'
 
     def __str__(self):
         return f'{self.recipe.name}, {self.ingredient.name}: {self.amount}'

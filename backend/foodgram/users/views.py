@@ -3,13 +3,12 @@ from api.views import AbstractGETViewSet
 from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer, UserWithRecipesSerializer)
-from rest_framework.permissions import AllowAny
 
 
 class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):

@@ -4,7 +4,7 @@ from .models import Ingredient, IngredientAmount, Recipe, Tag
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_filter = ('name', 'tag__name', 'author__username', )
+    list_filter = ('name', 'tags__name', 'author__username', )
 
 
 class TagAdmin(admin.ModelAdmin):

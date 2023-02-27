@@ -1,5 +1,6 @@
 from api.pagination import SixItemPagination
 from api.views import AbstractGETViewSet
+from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -63,6 +64,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
         url_path='subscribe',
     )
     def subscribe(self, request, pk):
+        author = get_object_or_404(User, id=pk)
         data = {
             'author': pk,
             'follower': request.user.id,
@@ -76,7 +78,7 @@ class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):
 
         return Response(
             UserWithRecipesSerializer(
-                request.user, context={
+                author, context={
                     'request': request,
                     'recipes_limit': recipes_limit
                 }

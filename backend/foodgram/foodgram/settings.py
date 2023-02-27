@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'colorfield',
-    'django_extensions',
     'django_filters',
     'recipes',
     'api',
@@ -105,7 +104,7 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'db.sqlite',
+#         'NAME': 'db.sqlite3',
 #     }
 # }
 

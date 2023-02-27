@@ -1,45 +1,28 @@
-from collections import OrderedDict
-from dataclasses import dataclass
-from datetime import datetime as dt
-
-from recipes.models import IngredientAmount, Recipe
 from users.models import User
 
 
-@dataclass
-class IngredientData:
-    name: str
-    amount: float
-    units: str
-
-
 def make_cart_file(user: User):
-    recipes: OrderedDict[Recipe] = user.shopping_cart.all()
+    ingr_values = user.shopping_cart.values_list(
+        'amount__ingredient__id',
+        'amount__ingredient__name',
+        'amount__ingredient__measurement_unit',
+        'amount__amount',
+    )
+    id = 0
+    name = 1
+    units = 2
+    amount = 3
 
-    ingredients: list[IngredientData] = []
-    for recipe in recipes:
-        for ingredient in recipe.ingredients.all():
-            amount = IngredientAmount.objects.get(
-                recipe=recipe,
-                ingredient=ingredient
-            ).amount
-            data = IngredientData(
-                ingredient.name, amount, ingredient.measurement_unit
-            )
-            # If item does not appear in list 'index' method returns -1
-            # To turn it to False statement we just need to add 1 to it
-            # So this +1 in 'if' just check duplicates in list
-            try:
-                index = ingredients.index(data)
-                ingredients[index].amount += data.amount
-            except ValueError:
-                ingredients.append(data)
+    result_dict = {}
+    for ingredient in ingr_values:
+        ingr_id = ingredient[id]
+        if ingr_id not in result_dict:
+            result_dict[ingr_id] = {
+                'name': ingredient[name],
+                'measurement_unit': ingredient[units],
+                'amount': ingredient[amount],
+            }
+        else:
+            result_dict[ingr_id]['amount'] += ingredient[amount]
 
-    date = dt.date(dt.now())
-    filename = f'media/shopping_lists/{user.username}_{date}.txt'
-
-    with open(filename, 'w', encoding='utf-8') as f:
-        for data in ingredients:
-            f.write(f'{data.name}: {data.amount} {data.units}\n')
-
-    return filename
+    return result_dict

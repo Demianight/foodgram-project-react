@@ -46,11 +46,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeEditCreateSerializer
         return RecipeSerializer
 
-    # def get_permissions(self):
-    #     if self.action in ('partial_update', 'delete'):
-    #         return [IsAuthorPermission(), ]
-    #     return [NotAuthPermission(), ]
-
     def get_queryset(self):
         queryset = self.queryset
 
@@ -101,12 +96,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
-        filename = make_cart_file(request.user)
+        res_dict = make_cart_file(request.user)
+        file_name = f'{request.user}_shopping_list.txt'
+        lines = []
+        for id, data in res_dict.items():
+            name = data['name']
+            measurement_unit = data['measurement_unit']
+            amount = data['amount']
+            lines.append(f'{name}: {amount} {measurement_unit}')
 
-        file = open(filename, 'r')
-
-        response: Response = Response(
-            file, content_type='text/plain',
+        response_content = '\n'.join(lines)
+        response = Response(
+            response_content, content_type="text/plain, charset=utf8"
         )
-        response['Content-Disposition'] = 'attachment; filename="text.txt"'
+        response['Content-Disposition'] = f'attachment; filename={file_name}'
         return response

@@ -86,12 +86,13 @@ class Ingredient(models.Model):
 class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
+        related_name='amount',
     )
     ingredient = models.ForeignKey(
         Ingredient,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
     )
     amount = models.PositiveSmallIntegerField()

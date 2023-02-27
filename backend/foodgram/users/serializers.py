@@ -34,9 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return False
         follow = user.follows.filter(author=obj)
-        if follow.exists():
-            return True
-        return False
+        return follow.exists()
 
     def validate_password(self, password):
         validate_password(password)

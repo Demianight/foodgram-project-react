@@ -128,7 +128,6 @@ class RecipeEditCreateSerializer(serializers.ModelSerializer):
 
         super().update(instance, validated_data)
 
-        instance.save()
         return instance
 
     def to_representation(self, instance):

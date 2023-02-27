@@ -72,8 +72,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ids = self.request.user.shopping_cart.values_list('id', flat=True)
             queryset = queryset.filter(id__in=ids)
 
-        is_in_favorite = self.request.query_params.get('is_in_favorite')
-        if is_in_favorite:
+        is_favorited = self.request.query_params.get('is_favorited')
+        if is_favorited:
             ids = self.request.user.favorite.values_list('id', flat=True)
             queryset = queryset.filter(id__in=ids)
 

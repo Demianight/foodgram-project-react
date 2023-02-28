@@ -132,8 +132,11 @@ dmypy.json
 .idea
 
 # Django static dir
+static/
+media/
 static
 media
-
+/static/
+/media/
 # Vscode stuff 
 .vscode

@@ -1,12 +1,13 @@
 from urllib.parse import unquote
 
-from recipes.models import Ingredient, Recipe, Tag
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from recipes.models import Ingredient, Recipe, Tag
 from users.permissions import NotAuthPermission
 
-from .mixins import AbstractGETViewSet, add_to_cart, remove_from_cart
+from .mixins import AbstractGETViewSet, Cart
 from .pagination import SixItemPagination
 from .serializers import (IngredientSerializer, RecipeEditCreateSerializer,
                           RecipeSerializer, TagSerializer)
@@ -76,19 +77,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST', ], url_path='shopping_cart',)
     def shopping_cart(self, request, pk=None):
-        return add_to_cart(pk, request, 'shopping_cart')
+        return Cart(pk, request, 'shopping_cart').add()
 
     @shopping_cart.mapping.delete
     def remove_from_shopping_cart(self, request, pk=None):
-        return remove_from_cart(pk, request, 'shopping_cart')
+        return Cart(pk, request, 'shopping_cart').remove()
 
     @action(detail=True, methods=['POST', ], url_path='favorite', )
     def favorite(self, request, pk=None):
-        return add_to_cart(pk, request, 'favorite')
+        return Cart(pk, request, 'favorite').add()
 
     @favorite.mapping.delete
     def remove_favorite_list(self, request, pk=None):
-        return remove_from_cart(pk, request, 'favorite')
+        return Cart(pk, request, 'favorite').remove()
 
     @action(
         detail=False,
@@ -96,13 +97,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
-        res_dict = make_cart_file(request.user)
+        result = make_cart_file(request.user)
+        print(result)
         file_name = f'{request.user}_shopping_list.txt'
         lines = []
-        for id, data in res_dict.items():
-            name = data['name']
-            measurement_unit = data['measurement_unit']
-            amount = data['amount']
+        for data in result:
+            name = data.get('ingredient__name')
+            measurement_unit = data.get('ingredient__measurement_unit')
+            amount = data.get('ingr_amount')
             lines.append(f'{name}: {amount} {measurement_unit}')
 
         response_content = '\n'.join(lines)

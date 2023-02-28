@@ -1,5 +1,6 @@
 from colorfield.fields import ColorField
 from django.db import models
+
 from users.models import User
 
 
@@ -23,6 +24,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         'Ingredient',
         verbose_name='Ингредиенты',
+        related_name='recipes'
     )
     tags = models.ManyToManyField(
         'Tag',

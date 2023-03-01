@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 from recipes.models import Ingredient, Recipe, Tag
 from users.permissions import NotAuthPermission
-
 from .mixins import AbstractGETViewSet, Cart
 from .pagination import SixItemPagination
 from .serializers import (IngredientSerializer, RecipeEditCreateSerializer,
@@ -98,7 +97,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def download_shopping_cart(self, request):
         result = make_cart_file(request.user)
-        print(result)
         file_name = f'{request.user}_shopping_list.txt'
         lines = []
         for data in result:

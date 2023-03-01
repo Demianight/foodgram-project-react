@@ -17,7 +17,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1'
 ]
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '158.160.28.160',

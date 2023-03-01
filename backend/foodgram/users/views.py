@@ -5,12 +5,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api.pagination import SixItemPagination
-from api.views import AbstractGETViewSet
-
 from .models import User
 from .serializers import (ChangePasswordSerializer, FollowSerializer,
                           UserSerializer, UserWithRecipesSerializer)
+from api.pagination import SixItemPagination
+from api.views import AbstractGETViewSet
 
 
 class UsersViewSet(AbstractGETViewSet, mixins.CreateModelMixin):

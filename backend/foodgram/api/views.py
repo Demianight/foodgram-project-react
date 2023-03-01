@@ -4,13 +4,13 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from recipes.models import Ingredient, Recipe, Tag
-from users.permissions import NotAuthPermission
 from .mixins import AbstractGETViewSet, Cart
 from .pagination import SixItemPagination
 from .serializers import (IngredientSerializer, RecipeEditCreateSerializer,
                           RecipeSerializer, TagSerializer)
 from .utils import make_cart_file
+from recipes.models import Ingredient, Recipe, Tag
+from users.permissions import NotAuthPermission
 
 
 class TagViewSet(AbstractGETViewSet):

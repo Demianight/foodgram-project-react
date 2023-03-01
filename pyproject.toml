@@ -1,2 +1,2 @@
 [tool.isort]
-known_first_party = ["users", "api", "foodgram", "recipes"]
+known_local_folder = ["users", "api", "foodgram", "recipes"]

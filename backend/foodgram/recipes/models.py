@@ -1,4 +1,5 @@
 from colorfield.fields import ColorField
+from django.core.validators import validate_image_file_extension
 from django.db import models
 
 from users.models import User
@@ -19,6 +20,7 @@ class Recipe(models.Model):
     image = models.ImageField(
         upload_to='recipes/',
         verbose_name='Изображение рецепта',
+        validators=[validate_image_file_extension, ],
     )
     text = models.TextField(verbose_name='Описание рецепта', )
     ingredients = models.ManyToManyField(

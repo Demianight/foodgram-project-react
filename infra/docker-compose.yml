@@ -4,7 +4,6 @@ services:
   frontend:
     container_name: front
     image: demianight/dimploma_front:latest
-    # build: frontend/.
     volumes:
       - ../frontend/:/app/result_build/
 

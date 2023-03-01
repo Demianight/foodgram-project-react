@@ -2,6 +2,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from recipes.models import Ingredient, IngredientAmount, Recipe, Tag
+from users.models import User
 from users.serializers import UserSerializer
 
 
@@ -33,19 +34,6 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'measurement_unit', ]
 
 
-class IngredientInRecipeGetSerializer(serializers.ModelSerializer):
-    amount = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Ingredient
-        fields = ['id', 'name', 'measurement_unit', 'amount', ]
-
-    def get_amount(self, obj):
-        recipe = self.context.get('recipe')
-        amount = IngredientAmount.objects.get(recipe=recipe, ingredient=obj)
-        return amount.amount
-
-
 class IngredientsInRecipesPostSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.IntegerField(write_only=True)
@@ -57,7 +45,7 @@ class IngredientsInRecipesPostSerializer(serializers.ModelSerializer):
     def validate_amount(self, amount):
         if amount < 0:
             raise serializers.ValidationError(
-                'Ingredient amount should be greater than zero.'
+                {'errors': 'Ingredient amount should be greater than zero.'}
             )
         return amount
 
@@ -80,14 +68,20 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time', 'is_favorited', 'is_in_shopping_cart',
         ]
 
-    def get_is_favorited(self, obj):
-        user = self.context.get('request').user
+    def validate_cooking_time(self, value):
+        if value < 1:
+            raise serializers.ValidationError(
+                {'errors': 'Cooking time must be greater than 0.'}
+            )
+
+    def get_is_favorited(self, obj: Recipe):
+        user: User = self.context.get('request').user
         if user.is_authenticated:
             return user.favorite.filter(id=obj.id).exists()
         return False
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context.get('request').user
+        user: User = self.context.get('request').user
         if user.is_authenticated:
             return user.shopping_cart.filter(id=obj.id).exists()
         return False
@@ -140,7 +134,7 @@ class RecipeEditCreateSerializer(serializers.ModelSerializer):
         self.create_ingredients(ingredient, recipe)
         return recipe
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Recipe, validated_data):
         if 'tags' in self.validated_data:
             tags = validated_data.pop('tags', instance.tags.all())
             instance.tags.set(tags)

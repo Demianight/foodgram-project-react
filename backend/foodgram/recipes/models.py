@@ -99,7 +99,10 @@ class IngredientAmount(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
-    amount = models.PositiveSmallIntegerField()
+    amount = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         constraints = [

@@ -45,13 +45,13 @@ Now you can access your project on http://localhost
 
 - To access admin panel go on http://localhost/admin/ fill in admin username and password. And you are able to do admin stuff :)
 
-- To stop the containers, to stop your project do step 3 and run ```sudo docker-compose stop```
+- To stop your project do step 3 and run ```sudo docker-compose stop```
 
 
-Default admin credentials:
-username: demian
-password: demian
-email: kdemian@yandex.ru
+- Default admin credentials:
+- username: demian
+- password: demian
+- email: kdemian@yandex.ru
 
 
 ## Review stuff

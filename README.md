@@ -48,7 +48,7 @@ Now you can access your project on http://localhost
 - To stop your project do step 3 and run ```sudo docker-compose stop```
 
 
-- Default admin credentials:
+## Default admin credentials:
 - username: demian
 - password: demian
 - email: kdemian@yandex.ru

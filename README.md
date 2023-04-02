@@ -52,7 +52,3 @@ Now you can access your project on http://localhost
 - username: demian
 - password: demian
 - email: kdemian@yandex.ru
-
-
-## Review stuff
-158.160.28.160
